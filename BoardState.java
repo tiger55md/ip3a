@@ -5,10 +5,10 @@ public class BoardState{
     private final static int maxGuesses = 10;  
     private static Piece[] guess;
     private Piece[][] board;
-    private int guesses = -1;
+    public int guesses = -1;
+
 
     public static boolean isValid(Piece[] pieces){
-        
         boolean isValid = true;
         int i = 0;
         if(pieces.length == puzzle.length && puzzle.length > 1){
@@ -24,32 +24,38 @@ public class BoardState{
         return isValid;
     }
 
+
    public BoardState(Piece[] puzzle, int maxGuesses){
-       if(isValid(puzzle) && maxGuesses > 1){
+       if(isValid(puzzle) && maxGuesses >= 1){
             board = new Piece[maxGuesses][2];
        }
    }
+
 
    public int puzzleLength(){
        return puzzle.length;
    }
 
+
    public int maxGuesses(){
        return maxGuesses;
    }
+
 
    public int guesses(){
        return guesses;
    }
 
+
+
    public void insertGuess(Piece[] guess){
        guesses++;
        if(guesses() < maxGuesses() && guess.length == puzzleLength() && isValid(guess)){
-           for(int i = 0; i < guess.length; i++){
                board[guesses] = guess;
-           }
        }
    }
+
+
 
    public int colorPosMatch(int i){
     int match = 0;
@@ -60,6 +66,8 @@ public class BoardState{
     }
     return match;
   }
+
+
 
   public int onlyColorMatches(int i){
     int colorMatch = 0;
@@ -85,34 +93,35 @@ public class BoardState{
   }
 
   public String toString(){
-    System.out.print("+");
+    StringBuilder sb = new StringBuilder();
+    sb.append("+");
     for(int j = 0; j < (2*board[guesses].length)+5; j++){
-      System.out.print("-");
+      sb.append("-");
     }
-    System.out.print("+\n");
+    sb.append("+\n");
     for(int k = guesses; k >= 0; k--){
       int match = colorPosMatch(guesses), colorMatch = onlyColorMatches(guesses);
-      System.out.print("| ");
+      sb.append("| ");
       for(Piece n:board[k]){
-        System.out.print(n);
+        sb.append(n);
       }
-      System.out.print(" | ");
+      sb.append(" | ");
       for(int j = 0; j < match; j++){
-        System.out.print('o');
+        sb.append('o');
       }
       for(int j = 0; j < colorMatch; j++){
-        System.out.print('*');
+        sb.append('*');
       }
       for(int j = 0; j < board[guesses].length - (match + colorMatch); j++){
-         System.out.print(' ');
+        sb.append(' ');
       }
-      System.out.println(" |");
-      System.out.print("+");
+      sb.append(" |");
+      sb.append("+");
       for(int j = 0; j < (2*board[guesses].length)+5; j++){
-        System.out.print("-");
+        sb.append("-");
       }
-      System.out.print("+\n");
+      sb.append("+\n");
     }
+    return sb.toString();
   }
-
 }
