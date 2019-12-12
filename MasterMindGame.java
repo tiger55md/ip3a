@@ -12,6 +12,7 @@ public class MasterMindGame{
     private int player2 = 2;
     private static Piece[] puzzle;
     private BoardState board;
+    private static Piece[] guess;
     
 
     public MasterMindGame(int numberRounds, int puzzleLength, int maxGuesses){
@@ -96,7 +97,7 @@ public class MasterMindGame{
 
     public boolean isOver(){
         boolean isOver = false;
-        if(board.guesses() > maxGuesses || roundsPlayed > numberRounds){
+        if(board.guesses() > maxGuesses || roundsPlayed > numberRounds || isEqual(puzzle,guess)){
             isOver = true;
         }
         return isOver;
@@ -132,6 +133,7 @@ public class MasterMindGame{
         sb.append("__________________________________________");
         sb.append("/n");
         for(int k = board.guesses(); k >= 0; k--){
+            if(!isOver()){
             sb.append("Round " + roundsPlayed + " of " + numberRounds + " being played. " );
             if(guessingPlayer == player1){
                 sb.append("Player1 guessing. \n");
@@ -142,6 +144,19 @@ public class MasterMindGame{
             sb.append("Score: " + points[0] + " - " + points[1]+ "   " + " Remaining guesses: " + (maxGuesses - board.guesses()) + "\n");
             sb.append(board.toString());
         }
+
+            if(isOver()){
+                sb.append("Round " + roundsPlayed + " of " + numberRounds + " ended. \n" );
+                    if(guessingPlayer == player1 && isEqual(puzzle,guess)){
+                        sb.append("Player1 guessed puzzle in " + board.guesses() + " attempts. \n");
+                    }
+                    else if(guessingPlayer == player2 && isEqual(puzzle,guess)){
+                        sb.append("Player2 guessed puzzle in " + board.guesses() + " attempts. \n");
+                    }
+                    sb.append("Score: " + points[0] + " - " + points[1] + "\n");
+                    sb.append(board.toString());
+                }
+            }
         return sb.toString();
     }
 
