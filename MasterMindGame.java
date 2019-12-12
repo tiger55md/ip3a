@@ -11,13 +11,14 @@ public class MasterMindGame{
     private int player1 = 1;
     private int player2 = 2;
     private static Piece[] puzzle;
+    private BoardState board;
     
 
     public MasterMindGame(int numberRounds, int puzzleLength, int maxGuesses){
         this.numberRounds = numberRounds;
         this.puzzleLength = puzzleLength;
         if( numberRounds > 2 && numberRounds % 2 == 0 && puzzleLength > 1 && maxGuesses >= 1){
-            BoardState board = new BoardState(puzzle,maxGuesses);
+            this.board = new BoardState(puzzle,maxGuesses);
         }
     }
 
@@ -95,7 +96,7 @@ public class MasterMindGame{
 
     public boolean isOver(){
         boolean isOver = false;
-        if(guesses() > maxGuesses || roundsPlayed > numberRounds){
+        if(board.guesses() > maxGuesses || roundsPlayed > numberRounds){
             isOver = true;
         }
         return isOver;
@@ -111,23 +112,37 @@ public class MasterMindGame{
     public int[] play(Piece[] guess){
         int[] play = new int[2];
         if(roundBeingPlayed() && isValid(guess)){
-            play[0] = colorPosMatch(guesses());
-            play[1] = onlyColorMatches(guesses());
+            play[0] = board.colorPosMatch(board.guesses());
+            play[1] = board.onlyColorMatches(board.guesses());
             if(guessingPlayer() == player1 && isEqual(puzzle,guess)){
                 points[0]++;
             }
             else if(guessingPlayer() == player2 && isEqual(puzzle,guess)){
                 points[1]++;
             }
-            if(isEqual(puzzle,guess) || guesses() > maxGuesses){
+            if(isEqual(puzzle,guess) || board.guesses() > maxGuesses){
                 startNewRound(puzzle);
             }       
         }
+        return play;
     }
 
     public String toString(){
-        String b = "b";
-        return b;
+        StringBuilder sb = new StringBuilder();
+        sb.append("__________________________________________");
+        sb.append("/n");
+        for(int k = board.guesses(); k >= 0; k--){
+            sb.append("Round " + roundsPlayed + " of " + numberRounds + " being played. " );
+            if(guessingPlayer == player1){
+                sb.append("Player1 guessing. \n");
+            }
+            else{
+                sb.append("Player2 guessing. \n");
+            }
+            sb.append("Score: " + points[0] + " - " + points[1]+ "   " + " Remaining guesses: " + (maxGuesses - board.guesses()) + "\n");
+            sb.append(board.toString());
+        }
+        return sb.toString();
     }
 
 }
