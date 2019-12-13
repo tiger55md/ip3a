@@ -1,4 +1,8 @@
 public enum Piece{
-    X,
-    O
+		B,
+		Y,
+		W,
+		R,
+		O,
+		G
 }
