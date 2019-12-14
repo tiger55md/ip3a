@@ -28,6 +28,7 @@ public class BoardState{
    public BoardState(Piece[] puzzle, int maxGuesses){
        if(isValid(puzzle) && maxGuesses >= 1){
             board = new Piece[maxGuesses][2];
+            this.puzzle = puzzle;
        }
    }
 
