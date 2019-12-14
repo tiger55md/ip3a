@@ -61,7 +61,7 @@ public class MasterMindGame{
 
     public boolean roundBeingPlayed(){
         boolean roundBeingPlayed = true;
-        if(roundsPlayed > 4){
+        if(board.guesses() > maxGuesses){
             roundBeingPlayed = false;
         }
         return roundBeingPlayed;
