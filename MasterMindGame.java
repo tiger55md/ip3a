@@ -1,9 +1,9 @@
 import java.util.Arrays;
 
 public class MasterMindGame{
-    private int puzzleLength = puzzleLength();
-    private int maxGuesses = maxGuesses();
-    private int numberRounds = 4;
+    private int puzzleLength;
+    private int maxGuesses;
+    private int numberRounds;
     private int roundsPlayed = 0;
     private int[] points = new int[]{0,0};
     private int puzzleMaster = 0;
@@ -18,6 +18,7 @@ public class MasterMindGame{
     public MasterMindGame(int numberRounds, int puzzleLength, int maxGuesses){
         this.numberRounds = numberRounds;
         this.puzzleLength = puzzleLength;
+        this.maxGuesses = maxGuesses;
         if( numberRounds > 2 && numberRounds % 2 == 0 && puzzleLength > 1 && maxGuesses >= 1){
             this.board = new BoardState(puzzle,maxGuesses);
         }
