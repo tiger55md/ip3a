@@ -15,7 +15,7 @@ public class MasterMindGame{
     private static Piece[] guess;
     
 
-    public MasterMindGame(int numberRounds, int puzzleLength, int maxGuesses){
+    public MasterMindGame(int numberRounds, int puzzleLe= puzzleLength();ngth, int maxGuesses){
         this.numberRounds = numberRounds;
         this.puzzleLength = puzzleLength;
         this.maxGuesses = maxGuesses;
@@ -61,11 +61,7 @@ public class MasterMindGame{
     }
 
     public boolean roundBeingPlayed(){
-        boolean roundBeingPlayed = true;
-        if(board.guesses() > maxGuesses){
-            roundBeingPlayed = false;
-        }
-        return roundBeingPlayed;
+        return board.guess() > maxGuesses;
     }
 
     public int points(int player){
@@ -97,11 +93,7 @@ public class MasterMindGame{
     }
 
     public boolean isOver(){
-        boolean isOver = false;
-        if(board.guesses() > maxGuesses || roundsPlayed > numberRounds || isEqual(puzzle,guess)){
-            isOver = true;
-        }
-        return isOver;
+        return (board.guesses() > maxGuesses || roundsPlayed > numberRounds || isEqual(puzzle,guess));
     }
 
     public void startNewRound(Piece[] puzzle){
@@ -116,11 +108,11 @@ public class MasterMindGame{
         if(roundBeingPlayed() && isValid(guess)){
             play[0] = board.colorPosMatch(board.guesses());
             play[1] = board.onlyColorMatches(board.guesses());
-            if(guessingPlayer() == player1 && isEqual(puzzle,guess)){
-                points[0]++;
-            }
-            else if(guessingPlayer() == player2 && isEqual(puzzle,guess)){
+            if((guessingPlayer() == player1) && (!isEqual(puzzle,guess) || !roundBeingPlayed)){
                 points[1]++;
+            }
+            else if((guessingPlayer() == player2) && (!isEqual(puzzle,guess) || !roundBeingPlayed)){
+                points[0]++;
             }
             if(isEqual(puzzle,guess) || board.guesses() > maxGuesses){
                 startNewRound(puzzle);
