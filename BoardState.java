@@ -28,7 +28,7 @@ public class BoardState{
    public BoardState(Piece[] puzzle, int maxGuesses){
        if(isValid(puzzle) && maxGuesses >= 1){
             board = new Piece[maxGuesses][2];
-            this.puzzle = puzzle;
+            this.puzzle = puzzle.clone();
        }
    }
 
@@ -52,16 +52,17 @@ public class BoardState{
    public void insertGuess(Piece[] guess){
        guesses++;
        if(guesses() < maxGuesses() && guess.length == puzzleLength() && isValid(guess)){
-               board[guesses] = guess;
+               board[guesses] = guess.clone();
        }
    }
 
 
 
    public int colorPosMatch(int i){
+    Piece[] guess1 = board[i].clone();
     int match = 0;
     for(int j = 0; j < puzzleLength(); j++){ 
-      if(puzzle[j] == guess[j]){
+      if(puzzle[j] == guess1[j]){
         match++;
       }
     }
@@ -71,22 +72,24 @@ public class BoardState{
 
 
   public int onlyColorMatches(int i){
+    Piece[] guess1 = board[i].clone();
     int colorMatch = 0;
     boolean[] puzzleBoolean = new boolean[puzzleLength()];
     for(int j = 0; j < puzzle.length; j++){ 
-        if(puzzle[i] == guess[i] ){
-        puzzleBoolean[i] = true;
+        if(puzzle[j] == guess1[j] ){
+        puzzleBoolean[j] = true;
       }
     }
     for(int j = 0; j < puzzleLength(); j++){
       boolean colorM = true;
-      if(guess[i] != puzzle[i]){
-        while(colorM && (j < puzzleLength())){ 
-          if(guess[i] == puzzle[j] && !puzzleBoolean[j]) {
-            puzzleBoolean[j] = true;
+      if(guess1[j] != puzzle[j]){
+        while(colorM && (k < puzzleLength())){ 
+          if(guess1[j] == puzzle[k] && !puzzleBoolean[k]) {
+            puzzleBoolean[k] = true;
             colorMatch++;
             colorM = false;
           }
+          k++;
         }
       }
     }
@@ -108,10 +111,10 @@ public class BoardState{
       }
       sb.append(" | ");
       for(int j = 0; j < match; j++){
-        sb.append('o');
+        sb.append('*');
       }
       for(int j = 0; j < colorMatch; j++){
-        sb.append('*');
+        sb.append('o');
       }
       for(int j = 0; j < board[guesses].length - (match + colorMatch); j++){
         sb.append(' ');
