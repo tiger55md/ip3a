@@ -10,12 +10,12 @@ public class MasterMindGame{
     private int guessingPlayer = 0;
     private int player1 = 1;
     private int player2 = 2;
-    private static Piece[] puzzle;
     private BoardState board;
+    private static Piece[] puzzle;
     private static Piece[] guess;
     
 
-    public MasterMindGame(int numberRounds, int puzzleLe= puzzleLength();ngth, int maxGuesses){
+    public MasterMindGame(int numberRounds, int puzzleLength, int maxGuesses){
         this.numberRounds = numberRounds;
         this.puzzleLength = puzzleLength;
         this.maxGuesses = maxGuesses;
@@ -45,23 +45,11 @@ public class MasterMindGame{
     } 
 
     public boolean isValid(Piece[] pieces){
-        boolean isValid = true; 
-        int i = 0;
-        if(pieces.length == puzzleLength && puzzleLength > 1){
-            while(isValid || i < puzzleLength ){
-                if(pieces[i] != null ){
-                    isValid = false;
-                }
-                i++;
-            }
-        }else{
-            isValid = false;
-        }
-        return isValid;
+        return board.isValid(pieces);
     }
 
     public boolean roundBeingPlayed(){
-        return board.guess() > maxGuesses;
+        return board.guesses() > maxGuesses;
     }
 
     public int points(int player){
@@ -108,10 +96,10 @@ public class MasterMindGame{
         if(roundBeingPlayed() && isValid(guess)){
             play[0] = board.colorPosMatch(board.guesses());
             play[1] = board.onlyColorMatches(board.guesses());
-            if((guessingPlayer() == player1) && (!isEqual(puzzle,guess) || !roundBeingPlayed)){
+            if((guessingPlayer() == player1) && (!isEqual(puzzle,guess) || !roundBeingPlayed())){
                 points[1]++;
             }
-            else if((guessingPlayer() == player2) && (!isEqual(puzzle,guess) || !roundBeingPlayed)){
+            else if((guessingPlayer() == player2) && (!isEqual(puzzle,guess) || !roundBeingPlayed())){
                 points[0]++;
             }
             if(isEqual(puzzle,guess) || board.guesses() > maxGuesses){
