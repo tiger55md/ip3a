@@ -13,7 +13,7 @@ public class BoardState{
     if( isValid(puzzle)){
       this.puzzle= puzzle.clone();
       this.board = new Piece[maxGuesses][4];
-      guesses = 0;
+      this.guesses = 0;
     }
    }
 
@@ -21,7 +21,7 @@ public class BoardState{
     boolean isValid = true;
     int i = 0;
     if(pieces != null && pieces.length == LENGTH){
-      while(!isValid && i < LENGTH){
+      while(isValid && i < LENGTH){
           if(pieces[i] == null ){
               isValid = false;
           }
@@ -42,16 +42,15 @@ public class BoardState{
 
 
    public int guesses(){
-     return guesses;
+     return this.guesses;
    }
 
 
 
    public void insertGuess(Piece[] guess){
-      guesses++;
-       board[guesses-1] = guess.clone();
+       board[guesses] = guess.clone();
        this.guess = guess.clone();
-       
+       guesses++;
    }
 
 
@@ -96,11 +95,12 @@ public class BoardState{
   public String toString(){
     StringBuilder sb = new StringBuilder();
     sb.append("+");
-    for(int j = 0; j < (2*board[guesses-1].length)+5; j++){
+    System.out.println(guesses);
+    for(int j = 0; j < 2*(board[guesses].length)+5; j++){
       sb.append("-");
     }
     sb.append("+\n");
-    for(int k = guesses-1; k >= 0; k--){
+    for(int k = guesses-1; k > 0; k--){
       int match = colorPosMatch(guesses), colorMatch = onlyColorMatches(guesses);
       sb.append("| ");
       for(Piece n:board[guesses-1]){
@@ -113,13 +113,13 @@ public class BoardState{
       for(int j = 0; j < colorMatch; j++){
         sb.append('o');
       }
-      for(int j = 0; j < board[guesses-1].length - (match + colorMatch); j++){
+      for(int j = 0; j < board[guesses].length - (match + colorMatch); j++){
         sb.append(' ');
       }
       sb.append(" |");
       sb.append("\n");
       sb.append("+");
-      for(int j = 0; j < (2*board[guesses-1].length)+5; j++){
+      for(int j = 0; j < (2*board[guesses].length)+5; j++){
         sb.append("-");
       }
       sb.append("+\n");
