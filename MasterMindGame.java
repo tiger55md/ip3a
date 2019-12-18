@@ -19,9 +19,6 @@ public class MasterMindGame{
         this.numberRounds = numberRounds;
         this.puzzleLength = puzzleLength;
         this.maxGuesses = maxGuesses;
-        if( numberRounds > 2 && numberRounds % 2 == 0 && puzzleLength > 1 && maxGuesses >= 1){
-            this.board = new BoardState(puzzle,maxGuesses);
-        }
     }
 
     private boolean isEqual(Piece[] puzzle, Piece[] guess){
@@ -45,11 +42,13 @@ public class MasterMindGame{
     } 
 
     public boolean isValid(Piece[] pieces){
+        puzzle = pieces.clone();
+        board = new BoardState(puzzle, maxGuesses);
         return board.isValid(pieces);
     }
 
     public boolean roundBeingPlayed(){
-        return board.guesses() > maxGuesses;
+        return board.guesses() < maxGuesses;
     }
 
     public int points(int player){
