@@ -57,7 +57,7 @@ public class MasterMindGame{
             if(guessingPlayer == 1){
                 guessingPlayer = 2;
             }
-            else{
+            else if(guessingPlayer == 2){
                 guessingPlayer = 1;
             }
         }
@@ -66,10 +66,10 @@ public class MasterMindGame{
 
     public int puzzleMaster(){
         if(roundBeingPlayed() == true){
-            if(puzzleMaster == 1){
+            if(guessingPlayer() == 1){
                 puzzleMaster = 2;
             }
-            else{
+            else if(guessingPlayer() == 2){
                 puzzleMaster = 1;
             }
         }
@@ -90,19 +90,18 @@ public class MasterMindGame{
 
     public int[] play(Piece[] guess){
         int[] play = new int[2];
+        this.guess = guess.clone();
         if(roundBeingPlayed() && isValid(guess)){
-            play[0] = board.colorPosMatch(board.guesses());
-            play[1] = board.onlyColorMatches(board.guesses());
-            points[puzzleMaster() - 1]++;
-            if(isEqual(puzzle,guess) == true){
-                points[guessingPlayer() - 1]++;
+            play[0] = board.colorPosMatch(board.guesses()+1);
+            play[1] = board.onlyColorMatches(board.guesses()+1);
+            if(isEqual(puzzle,guess)){
                 startNewRound(puzzle);
             }
-            else
-            if( board.guesses() > maxGuesses){
-
-                points[puzzleMaster() - 1]++;
+            else if( board.guesses() == maxGuesses){
                 startNewRound(puzzle);
+            }
+            else if(!isEqual(puzzle,guess)){
+                points[puzzleMaster() -1]++;
             }
         }
         return play;
@@ -141,4 +140,3 @@ public class MasterMindGame{
     }
 
 }
-
