@@ -11,8 +11,8 @@ public class MasterMindGame{
     private BoardState board;
     private static Piece[] puzzle;
     private static Piece[] guess;
-    private boolean roundBeingPlayed;
-    
+    private boolean roundBeingPlayed=false;
+
 
     public MasterMindGame(int numberRounds, int puzzleLength, int maxGuesses){
         this.numberRounds = numberRounds;
@@ -38,21 +38,20 @@ public class MasterMindGame{
 
     public int numberRounds(){
         return numberRounds;
-    } 
+    }
 
     public boolean isValid(Piece[] pieces){
         return board.isValid(pieces);
     }
 
-    public boolean roundBeingPlayed(){
-        this.roundBeingPlayed = false;
-        return this.roundBeingPlayed;
+    public boolean roundBeingPlayed(){  
+        return roundBeingPlayed;
     }
 
     public int points(int player){
         return points[player-1];
     }
-    
+
     public int guessingPlayer(){
         if(roundBeingPlayed() == true){
             if(guessingPlayer == 1){
@@ -60,7 +59,7 @@ public class MasterMindGame{
             }
             else{
                 guessingPlayer = 1;
-            } 
+            }
         }
         return guessingPlayer;
     }
@@ -85,8 +84,9 @@ public class MasterMindGame{
         roundsPlayed++;
         this.puzzle = Arrays.copyOf(puzzle,puzzleLength);
         board = new BoardState(puzzle, maxGuesses);
-        roundBeingPlayed = true;
-        }
+
+        roundBeingPlayed=!roundBeingPlayed;
+      }
 
     public int[] play(Piece[] guess){
         int[] play = new int[2];
@@ -95,16 +95,15 @@ public class MasterMindGame{
             play[1] = board.onlyColorMatches(board.guesses());
             points[puzzleMaster() - 1]++;
             if(isEqual(puzzle,guess) == true){
-                this.roundBeingPlayed = false;
-                System.out.println(roundBeingPlayed);
                 points[guessingPlayer() - 1]++;
                 startNewRound(puzzle);
             }
+            else
             if( board.guesses() > maxGuesses){
-               this.roundBeingPlayed = false;
+
                 points[puzzleMaster() - 1]++;
                 startNewRound(puzzle);
-            }       
+            }
         }
         return play;
     }
@@ -142,3 +141,4 @@ public class MasterMindGame{
     }
 
 }
+
