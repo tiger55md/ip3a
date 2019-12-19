@@ -9,8 +9,6 @@ public class MasterMindGame{
     private int puzzleMaster = 1;
     private int guessingPlayer = 2;
     private BoardState board;
-    private static Piece[] puzzle;
-    private static Piece[] guess;
     private boolean roundBeingPlayed=false;
 
 
@@ -21,7 +19,13 @@ public class MasterMindGame{
     }
 
     private boolean isEqual(Piece[] puzzle, Piece[] guess){
-        return Arrays.equals(puzzle,guess);
+        boolean isEqual = true;
+        for(int i = 0; i < puzzle.length && isEqual; i++){
+            if(puzzle[i] != guess[i]){
+                isEqual = false;
+            }
+        }
+        return isEqual;
     }
 
     public int puzzleLength(){
@@ -44,7 +48,10 @@ public class MasterMindGame{
         return board.isValid(pieces);
     }
 
-    public boolean roundBeingPlayed(){  
+    public boolean roundBeingPlayed(){
+        if( roundBeingPlayed ){
+            roundBeingPlayed = !(board.guesses() > maxGuesses || board.colorPosMatch(board.guesses()) == puzzleLength);
+        }
         return roundBeingPlayed;
     }
 
@@ -53,26 +60,10 @@ public class MasterMindGame{
     }
 
     public int guessingPlayer(){
-        if(roundBeingPlayed() == true){
-            if(guessingPlayer == 1){
-                guessingPlayer = 2;
-            }
-            else if(guessingPlayer == 2){
-                guessingPlayer = 1;
-            }
-        }
         return guessingPlayer;
     }
 
     public int puzzleMaster(){
-        if(roundBeingPlayed() == true){
-            if(guessingPlayer() == 1){
-                puzzleMaster = 2;
-            }
-            else if(guessingPlayer() == 2){
-                puzzleMaster = 1;
-            }
-        }
         return puzzleMaster;
     }
 
@@ -81,40 +72,37 @@ public class MasterMindGame{
     }
 
     public void startNewRound(Piece[] puzzle){
-        roundsPlayed++;
-        this.puzzle = Arrays.copyOf(puzzle,puzzleLength);
-        board = new BoardState(puzzle, maxGuesses);
 
-        roundBeingPlayed=!roundBeingPlayed;
+        board = new BoardState(puzzle, maxGuesses);
+        puzzleMaster = puzzleMaster == 1 ? 2 : 1;
+        guessingPlayer = guessingPlayer == 1 ? 2 : 1;
+        roundBeingPlayed = true;
+        roundsPlayed++;
       }
 
     public int[] play(Piece[] guess){
         int[] play = new int[2];
-        this.guess = guess.clone();
-        if(roundBeingPlayed() && isValid(guess)){
-            play[0] = board.colorPosMatch(board.guesses()+1);
-            play[1] = board.onlyColorMatches(board.guesses()+1);
-            if(isEqual(puzzle,guess)){
-                startNewRound(puzzle);
-            }
-            else if( board.guesses() == maxGuesses){
-                startNewRound(puzzle);
-            }
-            else if(!isEqual(puzzle,guess)){
-                points[puzzleMaster() -1]++;
-            }
+        board.insertGuess(guess.clone());
+        play[0] = board.colorPosMatch(board.guesses());
+        play[1] = board.onlyColorMatches(board.guesses());
+        if (board.colorPosMatch(board.guesses()) == puzzleLength) {
+            
+        } else if( board.guesses() < maxGuesses ){
+            points[puzzleMaster() -1]++;
+        } else {
+            points[puzzleMaster() -1] += 2;
         }
         return play;
     }
 
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("__________________________________________");
-        sb.append("/n");
-        for(int k = board.guesses(); k >= 0; k--){
+        for(int j = roundsPlayed; j > 0; j--){
+            sb.append("__________________________________________________________");
+            sb.append("\n");
             if(!isOver()){
-            sb.append("Round " + roundsPlayed + " of " + numberRounds + " being played. " );
-            if(guessingPlayer == 1){
+            sb.append("Round " + (roundsPlayed - 1) + " of " + numberRounds + " being played. " );
+            if(guessingPlayer() == 1){
                 sb.append("Player1 guessing. \n");
             }
             else{
@@ -123,20 +111,18 @@ public class MasterMindGame{
             sb.append("Score: " + points[0] + " - " + points[1]+ "   " + " Remaining guesses: " + (maxGuesses - board.guesses()) + "\n");
             sb.append(board.toString());
         }
-
-            if(isOver()){
-                sb.append("Round " + roundsPlayed + " of " + numberRounds + " ended. \n" );
-                    if(guessingPlayer == 1 && isEqual(puzzle,guess)){
-                        sb.append("Player1 guessed puzzle in " + board.guesses() + " attempts. \n");
-                    }
-                    else if(guessingPlayer == 2 && isEqual(puzzle,guess)){
-                        sb.append("Player2 guessed puzzle in " + board.guesses() + " attempts. \n");
-                    }
-                    sb.append("Score: " + points[0] + " - " + points[1] + "\n");
-                    sb.append(board.toString());
-                }
-            }
-        return sb.toString();
     }
 
+            if(board.colorPosMatch(board.guesses()) == puzzleLength){
+                sb.append("Round " + roundsPlayed + " of " + numberRounds + " ended. \n" );
+                if(guessingPlayer == 1){
+                    sb.append("Player 1 won");
+                }
+                else{
+                    sb.append("Player 2 won");
+                }
+                }
+        return sb.toString();
+    }
 }
+
