@@ -12,7 +12,7 @@ public class BoardState{
     this.maxGuesses = maxGuesses;
     if( isValid(puzzle)){
       this.puzzle= puzzle.clone();
-      this.board = new Piece[maxGuesses][4];
+      this.board = new Piece[maxGuesses+1][4];
       this.guesses = 0;
     }
    }
@@ -58,12 +58,18 @@ public class BoardState{
 
    public int colorPosMatch(int i){
     int match = 0;
-    guess = board[i-1];
-    for(int j = 0; j < puzzleLength(); j++){ 
-      if(puzzle[j] == guess[j]){
-        match++;
-      }
+    if(i != 0){
+      guess = board[i-1];
     }
+    else{
+      guess = board[i];
+    }
+      for(int j = 0; j < puzzleLength(); j++){ 
+        if(puzzle[j] == guess[j]){
+          match++;
+        }
+      }
+
     return match;
   }
 
@@ -71,7 +77,12 @@ public class BoardState{
 
   public int onlyColorMatches(int i){
     int colorMatch = 0;
-    guess = board[i-1];
+    if(i != 0){
+      guess = board[i-1];
+    }
+    else{
+      guess = board[i];
+    }
     boolean[] puzzleBoolean = new boolean[puzzleLength()];
     for(int j = 0; j < puzzle.length; j++){ 
         if(puzzle[j] == guess[j] ){
