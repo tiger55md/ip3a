@@ -1,20 +1,20 @@
 import java.util.Random;
-import java.util.List;
 
-public class ComputerPlayer{
+public class computerPlayer{
 
 private int puzzleLength;
 private int maxGuesses;
 private long seed;
-private Piece[] pieces=Piece.values();
+private Piece[] pieces = Piece.values();
+private int piecesLength = pieces.length; 
 
 
-    public ComputerPlayer(int puzzleLength, int maxGuesses){
+    public computerPlayer(int puzzleLength, int maxGuesses){
         this.puzzleLength = puzzleLength;
         this.maxGuesses = maxGuesses;
     }
 
-    public ComputerPlayer(int puzzleLength, int maxGuesses, long seed){
+    public computerPlayer(int puzzleLength, int maxGuesses, long seed){
         this.puzzleLength = puzzleLength;
         this.maxGuesses = maxGuesses;
         this.seed = seed;
@@ -38,9 +38,10 @@ private Piece[] pieces=Piece.values();
 
     private Piece[] generator(){
         Piece[] randomGen = new Piece[puzzleLength];
-        Random rd = new Random();
+        Random rd = new Random(this.seed);
         for(int i = 0; i < puzzleLength; i++){
-            randomGen[i] = pieces[rd.nextInt(pieces.length)];
+            randomGen[i] = pieces[rd.nextInt(piecesLength)];
+            
         }
         return randomGen.clone();
     }
