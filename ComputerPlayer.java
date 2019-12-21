@@ -1,3 +1,4 @@
+
 import java.util.Random;
 
 public class ComputerPlayer{
@@ -5,15 +6,12 @@ public class ComputerPlayer{
 private int puzzleLength;
 private int maxGuesses;
 private long seed;
-private Piece[] pieces = Piece.values();
 private Random rd;
-
-
 
     public ComputerPlayer(int puzzleLength, int maxGuesses){
         this.puzzleLength = puzzleLength;
         this.maxGuesses = maxGuesses;
-        rd = new Random(System.nanoTime());
+        rd = new Random();
         
     }
 
@@ -25,27 +23,30 @@ private Random rd;
     }
 
     public Piece[] firstGuess(){
-        Piece[] firstGuess = generator();
+        Piece[] firstGuess = new Piece[puzzleLength];
+        Piece[] pieces = Piece.values();
+        for(int i = 0; i < puzzleLength; i++){
+            firstGuess[i] = pieces[rd.nextInt(pieces.length)];
+        }
         return firstGuess;
     }  
 
 
     public Piece[] nextGuess(int colorPosMatch, int onlyColorMatch){
-        Piece[] nextGuess = generator();
+        Piece[] nextGuess = new Piece[puzzleLength];
+        Piece[] pieces = Piece.values();
+        for(int i = 0; i < puzzleLength; i++){
+            nextGuess[i] = pieces[rd.nextInt(pieces.length)];
+        }
         return nextGuess;
     }
 
     public Piece[] generatePuzzle(){
-        Piece[] puzzle = generator();
-        return puzzle;
-    }
-
-    private Piece[] generator(){
-        Piece[] randomGen = new Piece[puzzleLength];
+        Piece[] puzzle = new Piece[puzzleLength];
+        Piece[] pieces = Piece.values();
         for(int i = 0; i < puzzleLength; i++){
-            randomGen[i] = pieces[rd.nextInt(pieces.length)];
-            
+            puzzle[i] = pieces[rd.nextInt(pieces.length)];
         }
-        return randomGen.clone();
+        return puzzle;
     }
 }
