@@ -1,23 +1,27 @@
 import java.util.Random;
 
-public class computerPlayer{
+public class ComputerPlayer{
 
 private int puzzleLength;
 private int maxGuesses;
 private long seed;
 private Piece[] pieces = Piece.values();
-private int piecesLength = pieces.length; 
+private Random rd;
 
 
-    public computerPlayer(int puzzleLength, int maxGuesses){
+
+    public ComputerPlayer(int puzzleLength, int maxGuesses){
         this.puzzleLength = puzzleLength;
         this.maxGuesses = maxGuesses;
+        rd = new Random(System.nanoTime());
+        
     }
 
-    public computerPlayer(int puzzleLength, int maxGuesses, long seed){
+    public ComputerPlayer(int puzzleLength, int maxGuesses, long seed){
         this.puzzleLength = puzzleLength;
         this.maxGuesses = maxGuesses;
         this.seed = seed;
+        rd = new Random(seed);
     }
 
     public Piece[] firstGuess(){
@@ -38,9 +42,8 @@ private int piecesLength = pieces.length;
 
     private Piece[] generator(){
         Piece[] randomGen = new Piece[puzzleLength];
-        Random rd = new Random(this.seed);
         for(int i = 0; i < puzzleLength; i++){
-            randomGen[i] = pieces[rd.nextInt(piecesLength)];
+            randomGen[i] = pieces[rd.nextInt(pieces.length)];
             
         }
         return randomGen.clone();
